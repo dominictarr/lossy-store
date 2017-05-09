@@ -1,0 +1,19 @@
+{
+  "name": "lossy-store",
+  "description": "",
+  "version": "1.0.0",
+  "homepage": "https://github.com/dominictarr/lossy-store",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dominictarr/lossy-store.git"
+  },
+  "dependencies": {
+    "tape": "^4.6.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "set -e; for t in test/*.js; do node $t; done"
+  },
+  "author": "'Dominic Tarr' <dominic.tarr@gmail.com> (http://dominictarr.com)",
+  "license": "MIT"
+}
