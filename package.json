@@ -8,6 +8,7 @@
     "url": "git://github.com/dominictarr/lossy-store.git"
   },
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "tape": "^4.6.3"
   },
   "devDependencies": {},
