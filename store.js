@@ -48,7 +48,6 @@ module.exports = function (read, write) {
       else {
         var cbs = reading[key] = [cb]
         read(key, function (err, value) {
-
           //unusual, but incase someone overwrites the value
           //while we are reading. see apply_write
           if(cbs !== reading[key]) return

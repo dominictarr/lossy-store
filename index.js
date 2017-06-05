@@ -3,6 +3,7 @@ var json = require('./json')
 var Store = require('./store')
 var fs = require('fs')
 var path = require('path')
+var mkdirp = require('mkdirp')
 
 module.exports = function (dir, codec) {
   if(!dir)
@@ -36,13 +37,4 @@ module.exports = function (dir, codec) {
     })
   })
 }
-
-
-
-
-
-
-
-
-
 
