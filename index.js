@@ -5,7 +5,7 @@ var fs = require('fs')
 var path = require('path')
 var mkdirp = require('mkdirp')
 
-module.exports = function (dir, codec) {
+module.exports = function (dir, codec, keyCodec) {
   if(!dir)
     return Store(
       function (v, cb) { cb() },
@@ -13,6 +13,9 @@ module.exports = function (dir, codec) {
     )
 
   codec = codec || json
+  var keyEncode = keyCodec
+    ? keyCodec.encode || keyCodec
+    : function (e) { return e }
   var ready = false
   function mkdir (cb) {
     if(ready) cb()
@@ -23,7 +26,7 @@ module.exports = function (dir, codec) {
   }
 
   return Store(function read (id, cb) {
-    fs.readFile(path.join(dir, id), function (err, value) {
+    fs.readFile(path.join(dir, keyEncode(id)), function (err, value) {
       if(err) return cb(err)
       try { value = codec.decode(value) }
       catch (err) { return cb(err) }
@@ -33,8 +36,9 @@ module.exports = function (dir, codec) {
     try { value = codec.encode(value) }
     catch (err) { return cb(err) }
     mkdir(function () {
-      fs.writeFile(path.join(dir, id), value, cb)
+      fs.writeFile(path.join(dir, keyEncode(id)), value, cb)
     })
   })
 }
+
 
