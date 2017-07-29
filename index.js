@@ -16,6 +16,7 @@ module.exports = function (dir, codec, keyCodec) {
   var keyEncode = keyCodec
     ? keyCodec.encode || keyCodec
     : function (e) { return e }
+
   var ready = false
   function mkdir (cb) {
     if(ready) cb()
@@ -25,8 +26,12 @@ module.exports = function (dir, codec, keyCodec) {
     })
   }
 
+  function toPath(id) {
+    return path.join(dir, keyEncode(id))
+  }
+
   return Store(function read (id, cb) {
-    fs.readFile(path.join(dir, keyEncode(id)), function (err, value) {
+    fs.readFile(toPath(id), function (err, value) {
       if(err) return cb(err)
       try { value = codec.decode(value) }
       catch (err) { return cb(err) }
@@ -36,7 +41,7 @@ module.exports = function (dir, codec, keyCodec) {
     try { value = codec.encode(value) }
     catch (err) { return cb(err) }
     mkdir(function () {
-      fs.writeFile(path.join(dir, keyEncode(id)), value, cb)
+      fs.writeFile(toPath(id), value, cb)
     })
   })
 }
