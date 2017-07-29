@@ -1,8 +1,11 @@
 
-
+function isEmpty (o) {
+  for(var k in o) return false
+  return true
+}
 module.exports = function (read, write) {
 
-  var store = {}, dirty = {}, reading = {}, writing = false
+  var store = {}, dirty = {}, reading = {}, writing = false, waiting = []
 
   //this writes only once at a time.
   //at least, we want it to write at most once per file.
@@ -20,19 +23,23 @@ module.exports = function (read, write) {
   function _write () {
     if(writing) return
     var d = 0
+    //note, only one key is written at a time.
     for(var k in dirty) {
       if(dirty[k]) {
         dirty[k] = false
         writing = true
         return write(k, store[k], function (err) {
           writing = false
+          console.log('written', k, store[k])
           _write()
         })
       }
-      d++
     }
-    //clear to do list
-    if(d) dirty = {}
+    //if we wrote something, we returned.
+    //so clear todo list and fire listeners.
+    dirty = {}
+    while(waiting.length)
+      waiting.shift()()
   }
 
   function has (key) {
@@ -67,6 +74,10 @@ module.exports = function (read, write) {
       //not urgent, but save this if we are not doing anything.
       dirty[key] = true
       apply_write(key, value)
+    },
+    onDrain: function (cb) {
+      if(isEmpty(dirty)) cb()
+      else waiting.push(cb)
     }
   }
 }
