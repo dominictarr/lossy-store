@@ -21,6 +21,10 @@ ensure that this key is loaded from the file system.
 if the file has already been read, `cb` is called immediately.
 if `set` is called while waiting for the filesystem, `cb` is called immediately.
 
+### store.get (key, cb)
+
+get the current value for key, loading it if necessary
+
 ### store.get (key) => value
 
 return the currently set `value` for `key`. may be null.

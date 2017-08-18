@@ -30,7 +30,6 @@ module.exports = function (read, write) {
         writing = true
         return write(k, store[k], function (err) {
           writing = false
-          console.log('written', k, store[k])
           _write()
         })
       }
@@ -49,7 +48,7 @@ module.exports = function (read, write) {
   return {
     has: has,
     ensure: function (key, cb) {
-      if(has(key)) cb()
+      if(has(key)) cb(null, store[key])
       else if(reading[key])
         reading[key].push(cb)
       else {
@@ -62,10 +61,10 @@ module.exports = function (read, write) {
           apply_write(key, store[key] = value, err)
         })
       }
-
     },
-    get: function (key) {
-      return store[key]
+    get: function (key, cb) {
+      if(cb) self.ensure(key, cb)
+      else return store[key]
     },
     //if set is called during a read,
     //cb the readers immediately, and cancel the current read.
@@ -81,4 +80,8 @@ module.exports = function (read, write) {
     }
   }
 }
+
+
+
+
 
