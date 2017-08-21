@@ -63,7 +63,7 @@ module.exports = function (read, write) {
       }
     },
     get: function (key, cb) {
-      if(cb) self.ensure(key, cb)
+      if(cb) this.ensure(key, cb)
       else return store[key]
     },
     //if set is called during a read,
