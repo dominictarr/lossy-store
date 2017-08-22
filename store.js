@@ -44,8 +44,8 @@ module.exports = function (read, write) {
   function has (key) {
     return store[key] !== undefined
   }
-
-  return {
+  var self
+  return self = {
     has: has,
     ensure: function (key, cb) {
       if(has(key)) cb(null, store[key])
