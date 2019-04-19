@@ -6,11 +6,17 @@ var path = require('path')
 var mkdirp = require('mkdirp')
 
 module.exports = function (dir, codec, keyCodec) {
-  if(!dir)
+  if(!dir || !fs.readFile) {
+    if(!dir)
+      console.error('lossy store missing dir, skipping persistence')
+    else
+      console.error('lossy store has no fs access, skipping persistence')
+
     return Store(
       function (v, cb) { cb() },
       function (k,v,cb) { cb() }
     )
+  }
 
   codec = codec || json
   var keyEncode = keyCodec
@@ -45,5 +51,7 @@ module.exports = function (dir, codec, keyCodec) {
     })
   })
 }
+
+
 
 
